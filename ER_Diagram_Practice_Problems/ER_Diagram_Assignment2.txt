@@ -1,0 +1,156 @@
+UC12
+mysql> CREATE TABLE person(
+    -> id INT PRIMARY KEY,
+    -> fname VARCHAR(20),
+    -> lname VARCHAR(20));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE address ( id INT, street VARCHAR(20), city VARCHAR(20), zip VARCHAR(6), state VARCHAR(10), FOREIGN KEY (id) REFERENCES person(id));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> DESCRIBE TABLE address;
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table   | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | address | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    1 |   100.00 | NULL  |
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> CREATE TABLE phone(person_id INT, phone_number VARCHAR(10), PRIMARY KEY(person_id, phone_number), FOREIGN KEY(person_id) REFERENCES person(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE email(person_id INT, email_add VARCHAR(20), PRIMARY KEY(person_id, email_add), FOREIGN KEY(person_id) REFERENCES person(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE person_type(person_id INT, value VARCHAR(20), PRIMARY KEY(person_id, value), FOREIGN KEY(value) REFERENCES person(id));
+ERROR 3780 (HY000): Referencing column 'value' and referenced column 'id' in foreign key constraint 'person_type_ibfk_1' are incompatible.
+mysql> CREATE TABLE person_type(person_id INT, value VARCHAR(20), PRIMARY KEY(person_id, value), FOREIGN KEY(person_id) REFERENCES person(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> ^C
+mysql> ^C
+mysql> INSERT INTO person (id, first_name, last_name) VALUES
+    -> (1, 'Emily', 'Brown'),
+    -> (2, 'Jane', 'Doe'),
+    -> (3, 'John', 'Smith'),
+    -> (4, 'Michael', 'Brown'),
+    -> (5, 'Robert', 'Brown');
+ERROR 1054 (42S22): Unknown column 'first_name' in 'field list'
+mysql> INSERT INTO person (id, fname, lname) VALUES
+    -> (1, 'Emily', 'Brown'),
+    -> (2, 'Jane', 'Doe'),
+    -> (3, 'John', 'Smith'),
+    -> (4, 'Michael', 'Brown'),
+    -> (5, 'Robert', 'Brown');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO address (id, street, city, zip, state) VALUES
+    -> (1, '789 Oak Drive', 'Chicago', 60601, 'IL'),
+    -> (2, '456 Elm Avenue', 'Los Angeles', 90001, 'CA'),
+    -> (3, '123 Maple Street', 'New York', 10001, 'NY');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO person_type (person_id, type) VALUES
+    -> (1, 'friends'),
+    -> (2, 'family'),
+    -> (3, 'family'),
+    -> (4, 'fmly+frnd'),
+    -> (5, 'profession');
+ERROR 1054 (42S22): Unknown column 'type' in 'field list'
+mysql> INSERT INTO person_type (person_id, value) VALUES
+    -> (1, 'friends'),
+    -> (2, 'family'),
+    -> (3, 'family'),
+    -> (4, 'fmly+frnd'),
+    -> (5, 'profession');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO person_email (person_id, email) VALUES
+    -> (1, 'emily.brown@email.com'),
+    -> (2, 'jane.doe@email.com'),
+    -> (3, 'john.smith@email.com'),
+    -> (4, 'michael.brown@email.com'),
+    -> (5, 'robert.brown@email.com');
+ERROR 1146 (42S02): Table 'address_book_service.person_email' doesn't exist
+mysql> INSERT INTO email (person_id, email_add) VALUES
+    -> (1, 'emily.brown@email.com'),
+    -> (2, 'jane.doe@email.com'),
+    -> (3, 'john.smith@email.com'),
+    -> (4, 'michael.brown@email.com'),
+    -> (5, 'robert.brown@email.com');
+ERROR 1406 (22001): Data too long for column 'email_add' at row 1
+mysql> INSERT INTO email (person_id, email_add) VALUES
+    -> (1, 'emily@email.com'),
+    -> (2, 'jane.@email.com'),
+    -> (3, 'john.s@email.com'),
+    -> (4, 'mibrown@email.com'),
+    -> (5, 'r.brown@email.com');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO person_phone (person_id, phone) VALUES
+    -> (1, '5554567890'),
+    -> (2, '5559876543'),
+    -> (3, '5551234567'),
+    -> (4, '5554567890'),
+    -> (5, '5554567890');
+ERROR 1146 (42S02): Table 'address_book_service.person_phone' doesn't exist
+mysql> INSERT INTO phone (person_id, phone_number) VALUES
+    -> (1, '5554567890'),
+    -> (2, '5559876543'),
+    -> (3, '5551234567'),
+    -> (4, '5554567890'),
+    -> (5, '5554567890');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE person_address(person_id, address_id, FOREIGN KEY(person_id) REFERENCES person(id), FOREIGN KEY(address_id) REFERENCES address(id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', address_id, FOREIGN KEY(person_id) REFERENCES person(id), FOREIGN KEY(address_' at line 1
+mysql> drop table address;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>  CREATE TABLE address ( address_id INT, street VARCHAR(20), city VARCHAR(20), zip VARCHAR(6), state VARCHAR(10), PRIMARY KEY(address_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO address (address_id, street, city, zip, state) VALUES
+    -> (1, '789 Oak Drive', 'Chicago', 60601, 'IL'),
+    -> (2, '456 Elm Avenue', 'Los Angeles', 90001, 'CA'),
+    -> (3, '123 Maple Street', 'New York', 10001, 'NY');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++--------------------------------+
+| Tables_in_address_book_service |
++--------------------------------+
+| address                        |
+| address_book                   |
+| email                          |
+| person                         |
+| person_type                    |
+| phone                          |
++--------------------------------+
+6 rows in set (0.00 sec)
+
+mysql> create table person_address(person_id int, address_id int, FORIEGN KEY(person_id) REFERENCES person(id), FOREIGN KEY(address_id) REFERENCES address(address_id), PRIMARY KEY(person_id, address_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'KEY(person_id) REFERENCES person(id), FOREIGN KEY(address_id) REFERENCES address' at line 1
+mysql> CREATE TABLE person_address (
+    ->     person_id INT,
+    ->     address_id INT,
+    ->     FOREIGN KEY (person_id) REFERENCES person(id),
+    ->     FOREIGN KEY (address_id) REFERENCES address(address_id),
+    ->     PRIMARY KEY (person_id, address_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO person_address (person_id, address_id) VALUES
+    -> (1, 1),
+    -> (2, 2),
+    -> (3, 3),
+    -> (4, 1),
+    -> (5, 1);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0

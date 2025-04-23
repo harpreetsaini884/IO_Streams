@@ -1,0 +1,196 @@
+UC8
+mysql> ALTER TABLE employee_payroll ADD COLUMN address VARCHAR(20), ADD COLUMN phone VARCHAR(10), ADD COLUMN department VARCHAR(20) NOT NULL;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+--------------+--------+--------+------------+---------+-------+------------+
+| id | name         | gender | salary | start_date | address | phone | department |
++----+--------------+--------+--------+------------+---------+-------+------------+
+|  1 | John Smith   | M      |  50000 | 2023-01-15 | NULL    | NULL  |            |
+|  2 | Jane Doe     | M      |  60000 | 2023-03-01 | NULL    | NULL  |            |
+|  3 | Robert Brown | NULL   |  45000 | 2023-02-20 | NULL    | NULL  |            |
+|  4 | Emily Davis  | NULL   |  55000 | 2023-04-10 | NULL    | NULL  |            |
++----+--------------+--------+--------+------------+---------+-------+------------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE employee_payroll DELETE COLUMN address;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELETE COLUMN address' at line 1
+mysql> ALTER TABLE employee_payroll DROP COLUMN address;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE employee_payroll ADD address VARCHAR(20) DEFAULT 'default';
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+--------------+--------+--------+------------+-------+------------+---------+
+| id | name         | gender | salary | start_date | phone | department | address |
++----+--------------+--------+--------+------------+-------+------------+---------+
+|  1 | John Smith   | M      |  50000 | 2023-01-15 | NULL  |            | default |
+|  2 | Jane Doe     | M      |  60000 | 2023-03-01 | NULL  |            | default |
+|  3 | Robert Brown | NULL   |  45000 | 2023-02-20 | NULL  |            | default |
+|  4 | Emily Davis  | NULL   |  55000 | 2023-04-10 | NULL  |            | default |
++----+--------------+--------+--------+------------+-------+------------+---------+
+4 rows in set (0.00 sec)
+
+UC9
+mysql> ALTER TABLE employee_payroll ADD COLUMN basic_pay INT, ADD COLUMN deductions INT,  ADD COLUMN taxable_pay INT, ADD COLUMN income_pay INT, ADD COLUMN net_pay INT;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+--------------+--------+--------+------------+-------+------------+---------+-----------+------------+-------------+------------+---------+
+| id | name         | gender | salary | start_date | phone | department | address | basic_pay | deductions | taxable_pay | income_pay | net_pay |
++----+--------------+--------+--------+------------+-------+------------+---------+-----------+------------+-------------+------------+---------+
+|  1 | John Smith   | M      |  50000 | 2023-01-15 | NULL  |            | default |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  2 | Jane Doe     | M      |  60000 | 2023-03-01 | NULL  |            | default |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  3 | Robert Brown | NULL   |  45000 | 2023-02-20 | NULL  |            | default |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  4 | Emily Davis  | NULL   |  55000 | 2023-04-10 | NULL  |            | default |      NULL |       NULL |        NULL |       NULL |    NULL |
++----+--------------+--------+--------+------------+-------+------------+---------+-----------+------------+-------------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE employee_payroll
+    -> SET phone = '5551234567'
+    -> WHERE name = 'John Smith';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET phone = '5559876543'
+    -> WHERE name = 'Jane Doe';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET phone = '5554567890'
+    -> WHERE name = 'Robert Brown';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET phone = '5556541234'
+    -> WHERE name = 'Emily Davis';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET department = 'HR'
+    -> WHERE name = 'John Smith';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET department = 'IT'
+    -> WHERE name = 'Jane Doe';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> UPDATE employee_payroll
+    -> SET department = 'Finance'
+    -> WHERE name = 'Robert Brown';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> UPDATE employee_payroll
+    -> SET department = 'Marketing'
+    -> WHERE name = 'Emily Davis';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET department = 'Finance'
+    -> WHERE name = 'Robert Brown';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET department = 'IT'
+    -> WHERE name = 'Jane Doe';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET gender = 'M'
+    -> WHERE name = 'Robert Brown';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET gender = 'F'
+    -> WHERE name = 'Emily Davis';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET basic_pay = 40000, deductions = 5000, taxable_pay = 35000, income_pay = 30000, net_pay = 25000
+    -> WHERE name = 'John Smith';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET basic_pay = 50000, deductions = 8000, taxable_pay = 42000, income_pay = 36000, net_pay = 32000
+    -> WHERE name = 'Jane Doe';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET basic_pay = 35000, deductions = 4000, taxable_pay = 31000, income_pay = 27000, net_pay = 23000
+    -> WHERE name = 'Robert Brown';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_payroll
+    -> SET basic_pay = 45000, deductions = 6000, taxable_pay = 39000, income_pay = 34000, net_pay = 29000
+    -> WHERE name = 'Emily Davis';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+uc10
+mysql> INSERT INTO employee_payroll (name, gender, salary, start_date, phone, department, address)
+    -> VALUES ('Terissa', 'F', 70000, '2023-05-01', '5557891234', 'Sales and Marketing', '123 Park Avenue');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * from employee_payroll;
++----+--------------+--------+--------+------------+------------+---------------------+-----------------+-----------+------------+-------------+------------+---------+
+| id | name         | gender | salary | start_date | phone      | department          | address         | basic_pay | deductions | taxable_pay | income_pay | net_pay |
++----+--------------+--------+--------+------------+------------+---------------------+-----------------+-----------+------------+-------------+------------+---------+
+|  1 | John Smith   | M      |  50000 | 2023-01-15 | 5551234567 | HR                  | default         |     40000 |       5000 |       35000 |      30000 |   25000 |
+|  2 | Jane Doe     | M      |  60000 | 2023-03-01 | 5559876543 | IT                  | default         |     50000 |       8000 |       42000 |      36000 |   32000 |
+|  3 | Robert Brown | M      |  45000 | 2023-02-20 | 5554567890 | Finance             | default         |     35000 |       4000 |       31000 |      27000 |   23000 |
+|  4 | Emily Davis  | F      |  55000 | 2023-04-10 | 5556541234 | Marketing           | default         |     45000 |       6000 |       39000 |      34000 |   29000 |
+|  5 | Terissa      | F      |  70000 | 2023-05-01 | 5557891234 | Sales and Marketing | 123 Park Avenue |      NULL |       NULL |        NULL |       NULL |    NULL |
++----+--------------+--------+--------+------------+------------+---------------------+-----------------+-----------+------------+-------------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| address_book_service |
+| db                   |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sys                  |
++----------------------+
+7 rows in set (0.00 sec)
+
+mysql> use payroll_service;
+Database changed
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| address                   |
+| department                |
+| employee                  |
+| employee_payroll          |
+| payroll                   |
+| phone                     |
++---------------------------+
+6 rows in set (0.00 sec)

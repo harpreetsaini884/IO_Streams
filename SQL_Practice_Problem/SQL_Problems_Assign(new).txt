@@ -1,0 +1,195 @@
+//UC1  Ability to create a payroll service database
+
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank_db            |
+| employee_db        |
+| information_schema |
+| institute          |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| school_db          |
+| store_db           |
+| sys                |
+| test_db            |
+| xyz_company        |
++--------------------+
+12 rows in set (0.00 sec)
+
+mysql> use payroll_service;
+Database changed
+
+----------------------------------------------------
+
+// UC2 Ability to create a employee payroll table in the payroll service database to manage employee payrolls
+
+mysql> create table employee_payroll(
+    -> id INT PRIMARY KEY,
+    -> name VARCHAR(50) NOT NULL,
+    -> salary DECIMAL(18,2) NOT NULL,
+    -> start_date DATE NOT NULL);
+Query OK, 0 rows affected (0.07 sec)
+
+---------------------------------------------------------
+
+mysql> selectb * from employee_payroll;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selectb * from employee_payroll' at line 1
+mysql> DESC employee_payroll;
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| id         | int           | NO   | PRI | NULL    |       |
+| name       | varchar(50)   | NO   |     | NULL    |       |
+| salary     | decimal(18,2) | NO   |     | NULL    |       |
+| start_date | date          | NO   |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+----------------------------------------------------
+
+
+//UC 3 Ability to create employee payroll data in the payroll service database as part of CRUD Operation 
+
+mysql> INSERT INTO employee_payroll (id, name, salary, start_date)
+    -> VALUES
+    ->     (1, 'John Doe', 50000.00, '2023-01-15'),
+    ->     (2, 'Jane Smith', 62000.00, '2022-11-01'),
+    ->     (3, 'Robert Brown', 45000.00, '2024-06-10');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------------------------------------------
+
+// UC 4 Ability to retrieve all the employee payroll data that is added to payroll service database
+
+mysql> select * from employee_payroll;
++----+--------------+----------+------------+
+| id | name         | salary   | start_date |
++----+--------------+----------+------------+
+|  1 | John Doe     | 50000.00 | 2023-01-15 |
+|  2 | Jane Smith   | 62000.00 | 2022-11-01 |
+|  3 | Robert Brown | 45000.00 | 2024-06-10 |
++----+--------------+----------+------------+
+3 rows in set (0.01 sec)
+
+-----------------------------------------------------
+
+//UC 5 Ability to retrieve salary data for a particular employee as well as all employees who have joined in a particular data range from the payroll service database
+
+mysql> select * from employee_payroll where name="John Doe";
++----+----------+----------+------------+
+| id | name     | salary   | start_date |
++----+----------+----------+------------+
+|  1 | John Doe | 50000.00 | 2023-01-15 |
++----+----------+----------+------------+
+1 row in set (0.01 sec)
+
+mysql> select * from employee_payroll where start_date between CAST('2024-06-10' as DATE) AND DATE(NOW());
++----+--------------+----------+------------+
+| id | name         | salary   | start_date |
++----+--------------+----------+------------+
+|  3 | Robert Brown | 45000.00 | 2024-06-10 |
++----+--------------+----------+------------+
+1 row in set (0.00 sec)
+
+------------------------------------------------------
+
+//UC 6 Ability to add Gender to Employee Payroll Table and Update the Rows to reflect the correct Employee Gender
+
+mysql> ALTER TABLE employee_payroll
+    -> add gender CHAR(1) NOT NULL DEFAULT 'M';
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE_PAYROLL;
++----+--------------+----------+------------+--------+
+| id | name         | salary   | start_date | gender |
++----+--------------+----------+------------+--------+
+|  1 | John Doe     | 50000.00 | 2023-01-15 | M      |
+|  2 | Jane Smith   | 62000.00 | 2022-11-01 | M      |
+|  3 | Robert Brown | 45000.00 | 2024-06-10 | M      |
++----+--------------+----------+------------+--------+
+3 rows in set (0.00 sec)
+
+
+mysql> UPDATE employee_payroll
+    -> SET gender='F'
+    -> where name ="Jane Smith";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+--------------+----------+------------+--------+
+| id | name         | salary   | start_date | gender |
++----+--------------+----------+------------+--------+
+|  1 | John Doe     | 50000.00 | 2023-01-15 | M      |
+|  2 | Jane Smith   | 62000.00 | 2022-11-01 | F      |
+|  3 | Robert Brown | 45000.00 | 2024-06-10 | M      |
++----+--------------+----------+------------+--------+
+3 rows in set (0.00 sec)
+
+//UC 7  Ability to find sum, average, min, max and number of male and female employees
+
+mysql> select * from employee_payroll;
++----+--------------+----------+------------+--------+
+| id | name         | salary   | start_date | gender |
++----+--------------+----------+------------+--------+
+|  1 | John Doe     | 50000.00 | 2023-01-15 | M      |
+|  2 | Jane Smith   | 62000.00 | 2022-11-01 | F      |
+|  3 | Robert Brown | 45000.00 | 2024-06-10 | M      |
++----+--------------+----------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(salary) from employee_payroll;
++-------------+
+| sum(salary) |
++-------------+
+|   157000.00 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select max(salary) from employee_payroll;
++-------------+
+| max(salary) |
++-------------+
+|    62000.00 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select min(salary) from employee_payroll;
++-------------+
+| min(salary) |
++-------------+
+|    45000.00 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee_payroll;
++--------------+
+| avg(salary)  |
++--------------+
+| 52333.333333 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee_payroll where gender='F';
++----+------------+----------+------------+--------+
+| id | name       | salary   | start_date | gender |
++----+------------+----------+------------+--------+
+|  2 | Jane Smith | 62000.00 | 2022-11-01 | F      |
++----+------------+----------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) from employee_payroll;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.03 sec)
